@@ -1,29 +1,22 @@
-import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import './App.css';
- 
+import Layout from "./components/Layout";
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import ArticlePage from "./pages/ArticlePage";
+
 function App() {
-
   return (
-<div className="App">
-<header className="App-header">
-<h1>Welcome to My React App!</h1>
-<p>
-
-          Name: Nash Tongco
-          <br />
-          Email: nashtongco1@gmail.com
-          <br />
-          Other Personal Info: Tambay
-          <br />
-          <a href="https://github.com/nashtongco1/tongco-webprog">Github Link</a>
-</p>
-</header>
-</div>
-
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/articles" element={<ArticlePage />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
-
 }
- 
+
 export default App;
- 
