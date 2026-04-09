@@ -1,26 +1,30 @@
-import { Link } from "react-router-dom";
-import logo from "../assets/a.jpg"; 
+import { Link, useLocation } from "react-router-dom";
+import logo from "../assets/a.jpg";
 
 const Navbar = () => {
+  const location = useLocation();
+
+  const linkStyle = (path) =>
+    location.pathname === path
+      ? "bg-white text-purple-800 px-4 py-1 rounded-full"  // active link: white bg on purple
+      : "text-white hover:text-gray-300";                  // inactive links on purple
+
   return (
-    <nav className="flex justify-between items-center px-10 py-4 border-b bg-purple-500">
-      
-      {/* LOGO */}
-      <Link to="/"> 
+    <nav className="flex justify-between items-center px-10 py-4 border-b bg-purple-600">
+      <Link to="/">
         <img src={logo} alt="Logo" className="w-12 h-auto" />
       </Link>
 
-      {/* MENU */}
-      <div className="flex gap-6 text-sm font-medium">
-        <Link to="/" className="bg-black text-white px-4 py-1 rounded-full">
+      <div className="flex gap-6 text-sm font-medium items-center">
+        <Link to="/" className={linkStyle("/")}>
           HOME
         </Link>
-        <Link to="/about" className="bg-black text-white px-4 py-1 rounded-full">
+        <Link to="/about" className={linkStyle("/about")}>
           ABOUT
         </Link>
-        <Link to="/articles" className="bg-black text-white px-4 py-1 rounded-full">
+        <Link to="/articles" className={linkStyle("/articles")}>
           ARTICLES
-        </Link> 
+        </Link>
       </div>
     </nav>
   );
