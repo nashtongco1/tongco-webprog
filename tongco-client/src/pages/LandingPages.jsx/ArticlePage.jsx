@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import articles from "../assets/article-content";
-import NotFoundPage from "./NotFoundPage";
+import articles from "../../assets/article-content";
+import NotFoundPage from "../NotFoundPage";
 
 const ArticlePage = () => {
   const { name } = useParams();

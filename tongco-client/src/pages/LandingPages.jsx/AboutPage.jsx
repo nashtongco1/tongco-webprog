@@ -1,4 +1,4 @@
-import lbj from "../assets/lbj.jpg";
+import lbj from "../../assets/lbj.jpg";
 
 const AboutPage = () => {
   return (

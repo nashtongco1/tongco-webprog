@@ -1,8 +1,16 @@
 import bgImage from "../../assets/lcover.jpg";
 import bgImage2 from "../../assets/lc.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add your registration logic here
+    navigate("/signin");
+  };
+
   return (
     <div className="min-h-screen flex">
 
@@ -21,7 +29,7 @@ const SignUpPage = () => {
           Or use your email for registration
         </p>
 
-        <form className="flex flex-col gap-3 w-64">
+        <form className="flex flex-col gap-3 w-64" onSubmit={handleSubmit}>
 
           <input
             type="text"

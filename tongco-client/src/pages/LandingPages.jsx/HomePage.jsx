@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import bron from "../assets/bron.jpg";
-import x from "../assets/x.jpg";
-import y from "../assets/y.jpg";
-import z from "../assets/z.jpg";
+import bron from "../../assets/bron.jpg";
+import x from "../../assets/x.jpg";
+import y from "../../assets/y.jpg";
+import z from "../../assets/z.jpg";
 
 const HomePage = () => {
   return (
@@ -21,12 +21,11 @@ const HomePage = () => {
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {["GOAT", "HISTORY MAKER", "KING", "LEGEND"].map((item, i) => (
-          <div key={i} className="border p-4 rounded-lg text-center bg-yellow-300 font-bold">
+          <div key={i} className="border p-4 rounded-lg text-center bg-xx font-bold">
             {item}
           </div>
         ))}
-      </div>
-
+      </div>purples
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-purple-600">Highlight Moments</h2>
         <div className="grid md:grid-cols-3 gap-4">
