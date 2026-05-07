@@ -3,22 +3,19 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import DashLayout from "./layouts/DashLayout";
 
-// LANDING
+
 import HomePage from "./pages/LandingPages.jsx/HomePage";
 import AboutPage from "./pages/LandingPages.jsx/AboutPage";
 import ArticleListPage from "./pages/LandingPages.jsx/ArticleListPage";
 import ArticlePage from "./pages/LandingPages.jsx/ArticlePage";
 
-// AUTH
 import SignInPage from "./pages/AuthPages/SignInPage";
 import SignUpPage from "./pages/AuthPages/SignUpPage";
 
-// DASHBOARD
 import DashboardPage from "./pages/DashboardPages/DashboardPage";
 import ReportsPage from "./pages/DashboardPages/ReportsPage";
 import UsersPage from "./pages/DashboardPages/UsersPage";
 
-// OTHERS
 import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
@@ -26,7 +23,6 @@ function App() {
     <Router>
       <Routes>
 
-        {/* MAIN WEBSITE */}
         <Route
           path="*"
           element={
@@ -43,7 +39,6 @@ function App() {
           }
         />
 
-        {/* DASHBOARD */}
         <Route
           path="/dashboard"
           element={

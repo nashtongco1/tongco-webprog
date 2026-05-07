@@ -25,7 +25,7 @@ const HomePage = () => {
             {item}
           </div>
         ))}
-      </div>purples
+      </div>
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-purple-600">Highlight Moments</h2>
         <div className="grid md:grid-cols-3 gap-4">

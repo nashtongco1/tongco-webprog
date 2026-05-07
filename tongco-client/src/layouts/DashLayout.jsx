@@ -12,17 +12,15 @@ import {
 } from "@mui/material";
 
 const drawerWidth = 220;
-
 const DashLayout = ({ children }) => {
   return (
     <Box sx={{ display: "flex" }}>
 
-      {/* TOP NAVBAR (PURPLE-300) */}
       <AppBar
         position="fixed"
         sx={{
           zIndex: 1201,
-          backgroundColor: "#c4b5fd", // purple-300
+          backgroundColor: "#c4b5fd", 
           color: "black",
         }}
       >
@@ -31,14 +29,13 @@ const DashLayout = ({ children }) => {
         </Toolbar>
       </AppBar>
 
-      {/* SIDEBAR (PURPLE-600 stays strong) */}
       <Drawer
         variant="permanent"
         sx={{
           width: drawerWidth,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
-            backgroundColor: "#9333ea", // purple-600
+            backgroundColor: "#9333ea", 
             color: "white",
           },
         }}
@@ -60,13 +57,12 @@ const DashLayout = ({ children }) => {
         </List>
       </Drawer>
 
-      {/* MAIN CONTENT (PURPLE-500 BACKGROUND) */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
-          backgroundColor: "#a855f7", // purple-500
+          backgroundColor: "#a855f7", 
           minHeight: "100vh",
         }}
       >

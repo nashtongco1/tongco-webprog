@@ -1,38 +1,243 @@
-import { LineChart } from "@mui/x-charts/LineChart";
-import { Box, Typography, Paper } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Paper,
+  Button,
+  Grid,
+} from "@mui/material";
+
+import DownloadIcon from "@mui/icons-material/Download";
+
+import { PieChart } from "@mui/x-charts/PieChart";
+import { BarChart } from "@mui/x-charts/BarChart";
+
+/* IMPORT USERS DATA */
+import { usersData } from "./UsersPage";
 
 const ReportsPage = () => {
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+
+  const totalUsers = usersData.length;
+
+  const activeUsers = usersData.filter(
+    (user) => user.status === "Active"
+  ).length;
+
+  const inactiveUsers = usersData.filter(
+    (user) => user.status === "Inactive"
+  ).length;
+
+  const admins = usersData.filter(
+    (user) => user.role === "Admin"
+  ).length;
+
+  const viewers = usersData.filter(
+    (user) => user.role === "Viewer"
+  ).length;
+
+  const editors = usersData.filter(
+    (user) => user.role === "Editor"
+  ).length;
+
   return (
     <Box>
 
-      <Typography variant="h5" mb={2} color="white">
-        Reports Overview
-      </Typography>
 
-      <Paper sx={{ p: 2, borderRadius: 3 }}>
-        <LineChart
-          xAxis={[
-            {
-              data: [1, 2, 3, 4, 5, 6],
-              label: "Time",
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 3,
+        }}
+      >
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          color="white"
+        >
+          Reports Summary
+        </Typography>
+
+        <Button
+          variant="contained"
+          startIcon={<DownloadIcon />}
+          onClick={handlePrint}
+          sx={{
+            backgroundColor: "#fde047",
+            color: "black",
+            fontWeight: "bold",
+            "&:hover": {
+              backgroundColor: "#facc15",
             },
-          ]}
-          series={[
-            {
-              data: [2, 5, 3, 8, 7, 6],
-              label: "User Growth",
-              color: "#f97316",
-            },
-            {
-              data: [1, 3, 4, 6, 5, 9],
-              label: "Report Activity",
-              color: "#22c55e",
-            },
-          ]}
-          width={700}
-          height={350}
-        />
-      </Paper>
+          }}
+        >
+          PRINT REPORT
+        </Button>
+      </Box>
+
+
+      <Grid container spacing={3} mb={3}>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: 4,
+              backgroundColor: "#9333ea",
+              color: "white",
+            }}
+          >
+            <Typography variant="h6">
+              Total Users
+            </Typography>
+
+            <Typography
+              variant="h3"
+              fontWeight="bold"
+            >
+              {totalUsers}
+            </Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: 4,
+              backgroundColor: "#22c55e",
+              color: "white",
+            }}
+          >
+            <Typography variant="h6">
+              Active Users
+            </Typography>
+
+            <Typography
+              variant="h3"
+              fontWeight="bold"
+            >
+              {activeUsers}
+            </Typography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: 4,
+              backgroundColor: "#ef4444",
+              color: "white",
+            }}
+          >
+            <Typography variant="h6">
+              Inactive Users
+            </Typography>
+
+            <Typography
+              variant="h3"
+              fontWeight="bold"
+            >
+              {inactiveUsers}
+            </Typography>
+          </Paper>
+        </Grid>
+
+      </Grid>
+
+
+      <Grid container spacing={3}>
+
+        {/* BAR CHART */}
+
+        <Grid item xs={12} md={7}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: 4,
+            }}
+          >
+            <Typography variant="h6" mb={2}>
+              User Status Overview
+            </Typography>
+
+            <BarChart
+              xAxis={[
+                {
+                  scaleType: "band",
+                  data: ["Users"],
+                },
+              ]}
+              series={[
+                {
+                  data: [activeUsers],
+                  label: "Active Users",
+                  color: "#22c55e",
+                },
+                {
+                  data: [inactiveUsers],
+                  label: "Inactive Users",
+                  color: "#ef4444",
+                },
+              ]}
+              width={500}
+              height={300}
+            />
+          </Paper>
+        </Grid>
+
+
+        <Grid item xs={12} md={5}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: 4,
+            }}
+          >
+            <Typography variant="h6" mb={2}>
+              User Roles Distribution
+            </Typography>
+
+            <PieChart
+              series={[
+                {
+                  arcLabel: (item) => `${item.value}`,
+                  arcLabelMinAngle: 35,
+                  data: [
+                    {
+                      id: 0,
+                      value: admins,
+                      label: "Admins",
+                      color: "#9333ea",
+                    },
+                    {
+                      id: 1,
+                      value: viewers,
+                      label: "Viewers",
+                      color: "#22c55e",
+                    },
+                    {
+                      id: 2,
+                      value: editors,
+                      label: "Editors",
+                      color: "#f97316",
+                    },
+                  ],
+                },
+              ]}
+              width={400}
+              height={300}
+            />
+          </Paper>
+        </Grid>
+
+      </Grid>
 
     </Box>
   );

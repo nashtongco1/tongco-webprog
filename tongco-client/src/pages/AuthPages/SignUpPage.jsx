@@ -1,3 +1,4 @@
+import { useState } from "react";
 import bgImage from "../../assets/lcover.jpg";
 import bgImage2 from "../../assets/lc.jpg";
 import { Link, useNavigate } from "react-router-dom";
@@ -5,10 +6,56 @@ import { Link, useNavigate } from "react-router-dom";
 const SignUpPage = () => {
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    username: "",
+    age: "",
+    contact: "",
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const validate = () => {
+    let newErrors = {};
+
+    if (formData.password.length < 8) {
+      newErrors.password =
+        "Password must be at least 8 characters";
+    }
+
+    if (!/^\d{11}$/.test(formData.contact)) {
+      newErrors.contact =
+        "Contact number must be exactly 11 digits";
+    }
+
+    if (isNaN(formData.age)) {
+      newErrors.age = "Age must be a number";
+    }
+
+    if (formData.username.includes(" ")) {
+      newErrors.username =
+        "Username must not contain spaces";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your registration logic here
-    navigate("/signin");
+
+    if (validate()) {
+      navigate("/signin");
+    }
   };
 
   return (
@@ -20,41 +67,57 @@ const SignUpPage = () => {
       >
         <h1 className="text-2xl mb-4">Create Account</h1>
 
-        <div className="flex gap-3 mb-4">
-          <span className="border px-3 py-1 bg-[#1877F2] text-white rounded">f</span>
-          <span className="border px-3 py-1 bg-[#DB4437] text-white rounded">Gmail</span>
-        </div>
-
-        <p className="font-bold text-black text-lg mb-4">
-          Or use your email for registration
-        </p>
-
-        <form className="flex flex-col gap-3 w-64" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-3 w-72" onSubmit={handleSubmit}>
 
           <input
             type="text"
-            placeholder="Name"
-            className="w-full border border-black text-black placeholder-black p-2 mb-3 font-bold"
+            name="username"
+            placeholder="Username"
+            className="border p-2 text-black"
+            onChange={handleChange}
           />
+          <p className="text-red-500 text-sm">{errors.username}</p>
+
+          <input
+            type="text"
+            name="age"
+            placeholder="Age"
+            className="border p-2 text-black"
+            onChange={handleChange}
+          />
+          <p className="text-red-500 text-sm">{errors.age}</p>
+
+          <input
+            type="text"
+            name="contact"
+            placeholder="Contact Number"
+            className="border p-2 text-black"
+            onChange={handleChange}
+          />
+          <p className="text-red-500 text-sm">{errors.contact}</p>
 
           <input
             type="email"
+            name="email"
             placeholder="Email"
-            className="w-full border border-black text-black placeholder-black p-2 mb-3 font-bold"
+            className="border p-2 text-black"
+            onChange={handleChange}
           />
 
           <input
             type="password"
+            name="password"
             placeholder="Password"
-            className="w-full border border-black text-black placeholder-black p-2 mb-3 font-bold"
+            className="border p-2 text-black"
+            onChange={handleChange}
           />
+          <p className="text-red-500 text-sm">{errors.password}</p>
 
-          <button className="bg-purple-500 text-white py-2">
+          <button className="bg-purple-500 text-white py-2 rounded">
             SIGN UP
           </button>
 
         </form>
-
       </div>
 
       <div
