@@ -1,31 +1,60 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+
 import {
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
   Toolbar,
   AppBar,
   Typography,
   Box,
+  Button,
 } from "@mui/material";
 
 const drawerWidth = 220;
-const DashLayout = ({ children }) => {
-  return (
-    <Box sx={{ display: "flex" }}>
 
+const DashLayout = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const navItems = [
+    { label: "Overview", to: "/dashboard" },
+    { label: "Reports", to: "/dashboard/reports" },
+    { label: "Users", to: "/dashboard/users" },
+    { label: "Articles", to: "/dashboard/articles" },
+  ];
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/signin");
+  };
+
+  return (
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      
       <AppBar
         position="fixed"
         sx={{
           zIndex: 1201,
-          backgroundColor: "#c4b5fd", 
+          background: "#c4b5fd",
           color: "black",
+          boxShadow: "none",
         }}
       >
-        <Toolbar>
-          <Typography variant="h6">Dashboard</Typography>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography variant="h6" fontWeight="bold">
+            LeKids Dashboard
+          </Typography>
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
 
@@ -33,27 +62,44 @@ const DashLayout = ({ children }) => {
         variant="permanent"
         sx={{
           width: drawerWidth,
+          flexShrink: 0,
+
           "& .MuiDrawer-paper": {
             width: drawerWidth,
-            backgroundColor: "#9333ea", 
+            boxSizing: "border-box",
+            background:
+              "linear-gradient(180deg, #7e22ce 0%, #a855f7 100%)",
             color: "white",
+            borderRight: "none",
           },
         }}
       >
         <Toolbar />
 
-        <List>
-          <ListItem component={Link} to="/dashboard" button>
-            <ListItemText primary="Overview" />
-          </ListItem>
+        <List sx={{ px: 1.5, mt: 1 }}>
+          {navItems.map((item) => {
+            const active = location.pathname === item.to;
 
-          <ListItem component={Link} to="/reports" button>
-            <ListItemText primary="Reports" />
-          </ListItem>
+            return (
+              <ListItemButton
+                key={item.to}
+                component={Link}
+                to={item.to}
+                sx={{
+                  mb: 1,
+                  borderRadius: 2,
+                  background: active ? "#6d28d9" : "transparent",
+                  color: "white",
 
-          <ListItem component={Link} to="/users" button>
-            <ListItemText primary="Users" />
-          </ListItem>
+                  "&:hover": {
+                    background: "#7e22ce",
+                  },
+                }}
+              >
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            );
+          })}
         </List>
       </Drawer>
 
@@ -62,14 +108,18 @@ const DashLayout = ({ children }) => {
         sx={{
           flexGrow: 1,
           p: 3,
-          backgroundColor: "#a855f7", 
           minHeight: "100vh",
+
+          background:
+            "linear-gradient(135deg, #2e1065 0%, #581c87 50%, #6b21a8 100%)",
+
+          color: "white",
         }}
       >
         <Toolbar />
-        {children}
-      </Box>
 
+        <Outlet />
+      </Box>
     </Box>
   );
 };

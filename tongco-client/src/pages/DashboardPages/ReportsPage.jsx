@@ -12,7 +12,7 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import { BarChart } from "@mui/x-charts/BarChart";
 
 /* IMPORT USERS DATA */
-import { usersData } from "./UsersPage";
+import usersData from "../../data/users.json";
 
 const ReportsPage = () => {
 

@@ -5,14 +5,12 @@ const NotFoundPage = () => {
   return (
     <div className="relative h-screen w-full">
 
-      {/* Background image */}
       <img
         src={assets}
         alt="Not Found"
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Top-left Go Home button */}
       <div className="absolute top-4 left-4 z-20">
         <Link
           to="/"
@@ -22,9 +20,8 @@ const NotFoundPage = () => {
         </Link>
       </div>
 
-      {/* Centered text */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white">
-        <h1 className="text-7xl font-bold"></h1>
+        <h1 className="text-7xl font-bold">404</h1>
         <p className="text-lg mt-2">You're not supposed to be here man</p>
       </div>
 

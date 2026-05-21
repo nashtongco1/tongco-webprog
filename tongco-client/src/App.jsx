@@ -1,13 +1,11 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 
 import Layout from "./layouts/Layout";
 import DashLayout from "./layouts/DashLayout";
 
-
-import HomePage from "./pages/LandingPages.jsx/HomePage";
-import AboutPage from "./pages/LandingPages.jsx/AboutPage";
-import ArticleListPage from "./pages/LandingPages.jsx/ArticleListPage";
-import ArticlePage from "./pages/LandingPages.jsx/ArticlePage";
+import HomePage from "./pages/LandingPages/HomePage";
+import AboutPage from "./pages/LandingPages/AboutPage";
+import ArticleListPage from "./pages/LandingPages/ArticleListPage";
 
 import SignInPage from "./pages/AuthPages/SignInPage";
 import SignUpPage from "./pages/AuthPages/SignUpPage";
@@ -15,62 +13,74 @@ import SignUpPage from "./pages/AuthPages/SignUpPage";
 import DashboardPage from "./pages/DashboardPages/DashboardPage";
 import ReportsPage from "./pages/DashboardPages/ReportsPage";
 import UsersPage from "./pages/DashboardPages/UsersPage";
+import DashArticleListPage from "./pages/DashboardPages/DashArticleListPage";
 
 import NotFoundPage from "./pages/NotFoundPage";
 
-function App() {
-  return (
-    <Router>
-      <Routes>
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
 
-        <Route
-          path="*"
-          element={
-            <Layout>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/articles" element={<ArticleListPage />} />
-                <Route path="/articles/:name" element={<ArticlePage />} />
-                <Route path="/signin" element={<SignInPage />} />
-                <Route path="/signup" element={<SignUpPage />} />
-              </Routes>
-            </Layout>
-          }
-        />
+  if (!token) {
+    return <Navigate to="/signin" replace />;
+  }
 
-        <Route
-          path="/dashboard"
-          element={
-            <DashLayout>
-              <DashboardPage />
-            </DashLayout>
-          }
-        />
+  return children;
+};
 
-        <Route
-          path="/reports"
-          element={
-            <DashLayout>
-              <ReportsPage />
-            </DashLayout>
-          }
-        />
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "about", element: <AboutPage /> },
+      { path: "articles", element: <ArticleListPage /> },
+    ],
+  },
 
-        <Route
-          path="/users"
-          element={
-            <DashLayout>
-              <UsersPage />
-            </DashLayout>
-          }
-        />
+  {
+    path: "/signin",
+    element: <SignInPage />,
+  },
 
-        <Route path="*" element={<NotFoundPage />} />
+  {
+    path: "/signup",
+    element: <SignUpPage />,
+  },
 
-      </Routes>
-    </Router>
-  );
+  {
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute>
+        <DashLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <DashboardPage />,
+      },
+      {
+        path: "reports",
+        element: <ReportsPage />,
+      },
+      {
+        path: "users",
+        element: <UsersPage />,
+      },
+      {
+        path: "articles",
+        element: <DashArticleListPage />,
+      },
+    ],
+  },
+
+  {
+    path: "*",
+    element: <NotFoundPage />,
+  },
+]);
+
+export default function App() {
+  return <RouterProvider router={router} />;
 }
-
-export default App;

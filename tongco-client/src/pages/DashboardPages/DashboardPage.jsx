@@ -2,7 +2,7 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import PeopleIcon from "@mui/icons-material/People";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { usersData } from "./UsersPage"; // CONNECTED
+import usersData from "../../data/users.json";
 
 const DashboardPage = () => {
   const totalUsers = usersData.length;
@@ -40,7 +40,7 @@ const DashboardPage = () => {
           justifyContent: "center",
         }}
       >
-        <Grid container spacing={3} justifyContent="center">
+        <Grid container spacing={3} sx={{ justifyContent: "center" }}>
 
           <Grid item xs={12} md={4}>
             <Paper

@@ -1,14 +1,67 @@
+import { useState } from "react";
 import bgImage from "../../assets/lcover.jpg";
 import bgImage2 from "../../assets/lc.jpg";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../services/UserService";
 
 const SignInPage = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate("/");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [message, setMessage] = useState("");
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setMessage("");
+
+    try {
+      const response = await loginUser(formData);
+
+      // SAVE LOGIN DATA
+      localStorage.setItem("token", response.data.token);
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      );
+
+      localStorage.setItem(
+        "type",
+        response.data.user.type
+      );
+
+      alert("Login successful!");
+
+      // ADMIN GOES TO USERS PAGE
+      if (response.data.user.type === "admin") {
+        navigate("/dashboard/users");
+      } else {
+        navigate("/dashboard");
+      }
+
+    } catch (error) {
+      console.log(error.response?.data || error);
+
+      setMessage(
+        error.response?.data?.message || "Login failed."
+      );
+    }
+  };
+
+  const inputStyle =
+    "w-full border border-gray-300 p-2 rounded text-black focus:outline-none focus:ring-2 focus:ring-purple-400 transition";
 
   return (
     <div className="min-h-screen flex">
@@ -17,54 +70,70 @@ const SignInPage = () => {
         className="w-1/2 flex flex-col justify-center items-center p-10 bg-cover bg-center"
         style={{ backgroundImage: `url(${bgImage})` }}
       >
-        <h1 className="text-2xl mb-4">Sign in to Account</h1>
+        <div className="bg-white/90 p-8 rounded-xl shadow-lg w-80">
 
-        <div className="flex gap-3 mb-4">
-          <span className="border px-3 py-1 bg-[#1877F2] text-white rounded">f</span>
-          <span className="border px-3 py-1 bg-[#DB4437] text-white rounded">Gmail</span>
+          <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+            Sign In
+          </h1>
+
+          {message && (
+            <p className="text-red-500 text-sm text-center mb-3">
+              {message}
+            </p>
+          )}
+
+          <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              className={inputStyle}
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              className={inputStyle}
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+
+            <button className="bg-purple-600 text-white py-2 rounded hover:bg-purple-700 active:scale-95 transition font-semibold">
+              SIGN IN
+            </button>
+
+          </form>
+
         </div>
-
-        <p className="font-bold text-black text-lg mb-4">
-          Or use your email account
-        </p>
-
-        <form className="flex flex-col gap-3 w-64" onSubmit={handleSubmit}>
-
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full border border-black text-black placeholder-black p-2 mb-3 font-bold"
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border border-black text-black placeholder-black p-2 mb-3 font-bold"
-          />
-
-          <button className="bg-purple-500 text-white py-2">
-            SIGN IN
-          </button>
-
-        </form>
-
       </div>
 
       <div
         className="w-1/2 flex flex-col justify-center items-center p-10 bg-cover bg-center text-white"
         style={{ backgroundImage: `url(${bgImage2})` }}
       >
-        <h1 className="text-2xl mb-4">Hello, LeKids!</h1>
+        <div className="bg-black/40 p-10 rounded-xl text-center max-w-sm">
 
-        <p className="font-bold text-center mb-3">
-          Enter your details and start to explore the LeWorld!
-        </p>
+          <h1 className="text-3xl font-bold mb-4">
+            New Here?
+          </h1>
 
-        <Link to="/signup">
-          <button className="bg-purple-500 text-white py-2 px-6">
-            SIGN UP
-          </button>
-        </Link>
+          <p className="mb-6 text-sm text-gray-200">
+            Create an account and start managing users
+          </p>
+
+          <Link to="/signup">
+            <button className="border border-white px-6 py-2 rounded hover:bg-white hover:text-black transition">
+              SIGN UP
+            </button>
+          </Link>
+
+        </div>
       </div>
 
     </div>

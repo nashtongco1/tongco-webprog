@@ -1,224 +1,301 @@
-import { useState } from "react";
-
-import {
-  Box,
-  Typography,
-  TextField,
-  MenuItem,
-  Grid,
-  Button,
-  Paper,
-  Chip,
-} from "@mui/material";
-
-import { DataGrid } from "@mui/x-data-grid";
-import usersData from "../../data/users.json";
-
-export { usersData };
+import { useEffect, useState } from "react";
+import { fetchUsers, createUser, deleteUser } from "../../services/UserService";
 
 const UsersPage = () => {
-  const [search, setSearch] = useState("");
+  const userType = localStorage.getItem("type");
 
-  const [roleFilter, setRoleFilter] = useState("");
+  const [users, setUsers] = useState([]);
+  const [message, setMessage] = useState("");
 
-  const [genderFilter, setGenderFilter] = useState("");
-
-  const [statusFilter, setStatusFilter] = useState("");
-
-  const filteredUsers = usersData.filter((user) => {
-    const matchesSearch =
-      user.firstName.toLowerCase().includes(search.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase()) ||
-      user.username.toLowerCase().includes(search.toLowerCase());
-
-    const matchesRole =
-      roleFilter === "" || user.role === roleFilter;
-
-    const matchesGender =
-      genderFilter === "" || user.gender === genderFilter;
-
-    const matchesStatus =
-      statusFilter === "" || user.status === statusFilter;
-
-    return (
-      matchesSearch &&
-      matchesRole &&
-      matchesGender &&
-      matchesStatus
-    );
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    age: "",
+    gender: "Male",
+    contactNumber: "",
+    email: "",
+    password: "",
+    address: "N/A",
+    type: "editor",
+    isActive: true,
   });
 
-  const columns = [
-    { field: "id", headerName: "ID", width: 70 },
+  const loadUsers = async () => {
+    try {
+      const response = await fetchUsers();
+      setUsers(response.data.users || []);
+    } catch (error) {
+      setMessage("Failed to load users.");
+    }
+  };
 
-    {
-      field: "fullName",
-      headerName: "Full Name",
-      width: 180,
-      valueGetter: (params) => {
-        if (!params || !params.row) return "";
-        return `${params.row.firstName} ${params.row.lastName}`;
-      },
-    },
+  useEffect(() => {
+    if (userType === "admin") {
+      loadUsers();
+    }
+  }, [userType]);
 
-    { field: "username", headerName: "Username", width: 150 },
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    { field: "email", headerName: "Email", width: 220 },
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "isActive" ? value === "true" : value,
+    }));
+  };
 
-    { field: "role", headerName: "Role", width: 120 },
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
 
-    {
-      field: "status",
-      headerName: "Status",
-      width: 130,
-      renderCell: (params) => (
-        <Chip
-          label={params.value}
-          color={params.value === "Active" ? "success" : "default"}
-          size="small"
-        />
-      ),
-    },
+    try {
+      await createUser(formData);
 
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 200,
-      renderCell: () => (
-        <Box sx={{ display: "flex", gap: 1 }}>
-          <Button
-            size="small"
-            variant="contained"
-            sx={{ backgroundColor: "#9333ea", color: "white", "&:hover": { backgroundColor: "#7c3aed" } }}
-          >
-            Edit
-          </Button>
+      setMessage("User added successfully.");
 
-          <Button
-            size="small"
-            variant="contained"
-            sx={{ backgroundColor: "#fde047", color: "black", "&:hover": { backgroundColor: "#facc15" } }}
-          >
-            Disable
-          </Button>
-        </Box>
-      ),
-    },
-  ];
+      setFormData({
+        firstName: "",
+        lastName: "",
+        username: "",
+        age: "",
+        gender: "Male",
+        contactNumber: "",
+        email: "",
+        password: "",
+        address: "N/A",
+        type: "editor",
+        isActive: true,
+      });
+
+      loadUsers();
+    } catch (error) {
+      setMessage(error.response?.data?.message || "Failed to add user.");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteUser(id);
+      setMessage("User deleted successfully.");
+      loadUsers();
+    } catch (error) {
+      setMessage("Failed to delete user.");
+    }
+  };
+
+  if (userType !== "admin") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-purple-500 text-white">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-3">Access Denied</h1>
+          <p className="text-xl">
+            Only admin users can access the Users Management page.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <Box>
+    <div className="w-full min-h-screen bg-gray-100 p-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          Users Management
+        </h1>
 
-      <Typography
-        variant="h4"
-        fontWeight="bold"
-        mb={3}
-        color="white"
-      >
-        Users Management
-      </Typography>
+        <p className="text-gray-500 mb-6">
+          Add, view, and manage system users.
+        </p>
 
+        {message && (
+          <div className="mb-5 bg-purple-100 text-purple-700 px-4 py-3 rounded-lg">
+            {message}
+          </div>
+        )}
 
-      <Paper
-        sx={{
-          p: 3,
-          borderRadius: 4,
-          mb: 3,
-        }}
-      >
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              label="Search User"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              sx={{ minWidth: 180 }}
+        <div className="bg-white rounded-xl shadow p-6 mb-8">
+          <h2 className="text-xl font-bold text-gray-800 mb-5">
+            Add New User
+          </h2>
+
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <input
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
             />
-          </Grid>
 
-          <Grid item xs={12} sm={6} md={2}>
-            <TextField
-              select
-              fullWidth
-              label="Role"
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              sx={{ minWidth: 180 }}
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
+            />
+
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
+            />
+
+            <input
+              type="text"
+              name="age"
+              placeholder="Age"
+              value={formData.age}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
+            />
+
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="Admin">Admin</MenuItem>
-              <MenuItem value="Viewer">Viewer</MenuItem>
-              <MenuItem value="Editor">Editor</MenuItem>
-            </TextField>
-          </Grid>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
 
-          <Grid item xs={12} sm={6} md={2}>
-            <TextField
-              select
-              fullWidth
-              label="Gender"
-              value={genderFilter}
-              onChange={(e) => setGenderFilter(e.target.value)}
-              sx={{ minWidth: 180 }}
+            <input
+              type="text"
+              name="contactNumber"
+              placeholder="Contact Number"
+              value={formData.contactNumber}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
+            />
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
+            />
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
+            />
+
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="Male">Male</MenuItem>
-              <MenuItem value="Female">Female</MenuItem>
-            </TextField>
-          </Grid>
+              <option value="admin">Admin</option>
+              <option value="editor">Editor</option>
+              <option value="viewer">Viewer</option>
+            </select>
 
-          <Grid item xs={12} sm={6} md={2}>
-            <TextField
-              select
-              fullWidth
-              label="Status"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              sx={{ minWidth: 180 }}
+            <select
+              name="isActive"
+              value={formData.isActive}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 p-3 rounded-lg text-black"
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="Active">Active</MenuItem>
-              <MenuItem value="Inactive">Inactive</MenuItem>
-            </TextField>
-          </Grid>
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
 
-          <Grid item xs={12} sm={6} md={2}>
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{ height: "56px", backgroundColor: "#9333ea" }}
+            <button
+              type="submit"
+              className="md:col-span-2 bg-purple-600 text-white p-3 rounded-lg font-semibold hover:bg-purple-700 transition"
             >
-              ADD USER
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>  
+              Add User
+            </button>
+          </form>
+        </div>
 
+        <div className="bg-white rounded-xl shadow p-6">
+          <h2 className="text-xl font-bold text-gray-800 mb-5">
+            User List
+          </h2>
 
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="bg-purple-600 text-white">
+                  <th className="p-3 text-left">Name</th>
+                  <th className="p-3 text-left">Username</th>
+                  <th className="p-3 text-left">Email</th>
+                  <th className="p-3 text-left">Role</th>
+                  <th className="p-3 text-left">Status</th>
+                  <th className="p-3 text-center">Action</th>
+                </tr>
+              </thead>
 
-      <Paper
-        sx={{
-          height: 500,
-          width: "100%",
-          borderRadius: 4,
-          overflow: "hidden",
-        }}
-      >
-        <DataGrid
-          rows={filteredUsers}
-          columns={columns}
-          pageSizeOptions={[5]}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 5 },
-            },
-          }}
-        />
-      </Paper>
-
-    </Box>
+              <tbody>
+                {users.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="p-5 text-center text-gray-500 border"
+                    >
+                      No users found.
+                    </td>
+                  </tr>
+                ) : (
+                  users.map((user) => (
+                    <tr
+                      key={user._id}
+                      className="border-b hover:bg-gray-50 text-gray-700"
+                    >
+                      <td className="p-3">
+                        {user.firstName} {user.lastName}
+                      </td>
+                      <td className="p-3">{user.username}</td>
+                      <td className="p-3">{user.email}</td>
+                      <td className="p-3 capitalize">{user.type}</td>
+                      <td className="p-3">
+                        {user.isActive ? "Active" : "Inactive"}
+                      </td>
+                      <td className="p-3 text-center">
+                        <button
+                          onClick={() => handleDelete(user._id)}
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
