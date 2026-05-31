@@ -17,7 +17,7 @@ const SignUpPage = () => {
     email: "",
     password: "",
     address: "N/A",
-    type: "admin",
+    type: "editor",
     isActive: true,
   });
 
@@ -72,23 +72,25 @@ const SignUpPage = () => {
   };
 
   const inputStyle =
-    "w-full border border-gray-300 p-2 rounded text-black focus:outline-none focus:ring-2 focus:ring-purple-400 transition";
+    "w-full border border-white/40 p-3 rounded-xl text-black bg-white/75 placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition";
 
-  const errorStyle = "text-red-500 text-sm mt-1 min-h-[18px]";
+  const errorStyle = "text-red-500 text-xs min-h-[14px] -mt-3";
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col md:flex-row bg-black">
       <div
-        className="w-1/2 flex flex-col justify-center items-center p-10 bg-cover bg-center"
+        className="w-full md:w-1/2 relative flex flex-col justify-center items-center p-6 md:p-10 min-h-screen bg-cover bg-top"
         style={{ backgroundImage: `url(${bgImage})` }}
       >
-        <div className="bg-white/90 p-8 rounded-xl shadow-lg w-80">
-          <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+        <div className="absolute inset-0 bg-black/15"></div>
+
+        <div className="relative bg-white/20 backdrop-blur-lg p-8 rounded-3xl shadow-2xl w-full max-w-[430px] border border-white/30">
+          <h1 className="text-4xl font-bold mb-6 text-center text-white drop-shadow-lg">
             Create Account
           </h1>
 
           {message && (
-            <p className="text-red-500 text-sm text-center mb-3">
+            <p className="text-red-200 text-sm text-center mb-4 font-medium bg-red-500/40 rounded-lg py-2 px-3">
               {message}
             </p>
           )}
@@ -168,7 +170,7 @@ const SignUpPage = () => {
             />
             <p className={errorStyle}>{errors.password}</p>
 
-            <button className="bg-purple-600 text-white py-2 rounded hover:bg-purple-700 active:scale-95 transition font-semibold">
+            <button className="bg-purple-600 text-white py-3 rounded-xl hover:bg-purple-700 active:scale-95 transition font-semibold shadow-lg">
               SIGN UP
             </button>
           </form>
@@ -176,18 +178,22 @@ const SignUpPage = () => {
       </div>
 
       <div
-        className="w-1/2 flex flex-col justify-center items-center p-10 bg-cover bg-center text-white"
+        className="w-full md:w-1/2 relative flex flex-col justify-center items-center p-6 md:p-10 min-h-screen bg-cover bg-top text-white"
         style={{ backgroundImage: `url(${bgImage2})` }}
       >
-        <div className="bg-black/40 p-10 rounded-xl text-center max-w-sm">
-          <h1 className="text-3xl font-bold mb-4">Welcome Back!</h1>
+        <div className="absolute inset-0 bg-black/40"></div>
 
-          <p className="mb-6 text-sm text-gray-200">
+        <div className="relative bg-black/45 backdrop-blur-sm p-10 rounded-3xl text-center w-full max-w-[420px] shadow-2xl border border-white/20">
+          <h1 className="text-4xl font-bold mb-4 text-white">
+            Welcome Back!
+          </h1>
+
+          <p className="mb-6 text-sm text-gray-100">
             To keep connected, please login with your personal info
           </p>
 
           <Link to="/signin">
-            <button className="border border-white px-6 py-2 rounded hover:bg-white hover:text-black transition">
+            <button className="border border-white px-8 py-3 rounded-xl hover:bg-white hover:text-black transition font-semibold">
               SIGN IN
             </button>
           </Link>

@@ -6,6 +6,7 @@ import DashLayout from "./layouts/DashLayout";
 import HomePage from "./pages/LandingPages/HomePage";
 import AboutPage from "./pages/LandingPages/AboutPage";
 import ArticleListPage from "./pages/LandingPages/ArticleListPage";
+import ArticlePage from "./pages/LandingPages/ArticlePage";
 
 import SignInPage from "./pages/AuthPages/SignInPage";
 import SignUpPage from "./pages/AuthPages/SignUpPage";
@@ -19,9 +20,30 @@ import NotFoundPage from "./pages/NotFoundPage";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
+  const type = localStorage.getItem("type");
 
   if (!token) {
     return <Navigate to="/signin" replace />;
+  }
+
+  if (type === "viewer") {
+    localStorage.clear();
+    return <Navigate to="/signin" replace />;
+  }
+
+  return children;
+};
+
+const AdminRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const type = localStorage.getItem("type");
+
+  if (!token) {
+    return <Navigate to="/signin" replace />;
+  }
+
+  if (type !== "admin") {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
@@ -35,6 +57,7 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "about", element: <AboutPage /> },
       { path: "articles", element: <ArticleListPage /> },
+      { path: "articles/:name", element: <ArticlePage /> },
     ],
   },
 
@@ -66,7 +89,11 @@ const router = createBrowserRouter([
       },
       {
         path: "users",
-        element: <UsersPage />,
+        element: (
+          <AdminRoute>
+            <UsersPage />
+          </AdminRoute>
+        ),
       },
       {
         path: "articles",

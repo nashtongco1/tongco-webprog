@@ -20,7 +20,6 @@ const ReportsPage = () => {
     window.print();
   };
 
-
   const totalUsers = usersData.length;
 
   const activeUsers = usersData.filter(
@@ -46,19 +45,21 @@ const ReportsPage = () => {
   return (
     <Box>
 
-
       <Box
         sx={{
+          position: "relative",
+          mb: 4,
+          minHeight: "48px",
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
-          mb: 3,
+          justifyContent: "center",
         }}
       >
         <Typography
           variant="h4"
           fontWeight="bold"
           color="white"
+          textAlign="center"
         >
           Reports Summary
         </Typography>
@@ -68,6 +69,8 @@ const ReportsPage = () => {
           startIcon={<DownloadIcon />}
           onClick={handlePrint}
           sx={{
+            position: "absolute",
+            right: 0,
             backgroundColor: "#fde047",
             color: "black",
             fontWeight: "bold",
@@ -80,16 +83,23 @@ const ReportsPage = () => {
         </Button>
       </Box>
 
+      {/* CENTERED CARDS */}
+      <Grid
+        container
+        spacing={3}
+        justifyContent="center"
+        sx={{ mb: 4 }}
+      >
 
-      <Grid container spacing={3} mb={3}>
-
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item>
           <Paper
             sx={{
               p: 3,
+              width: 230,
               borderRadius: 4,
               backgroundColor: "#9333ea",
               color: "white",
+              textAlign: "center",
             }}
           >
             <Typography variant="h6">
@@ -105,13 +115,15 @@ const ReportsPage = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item>
           <Paper
             sx={{
               p: 3,
+              width: 230,
               borderRadius: 4,
               backgroundColor: "#22c55e",
               color: "white",
+              textAlign: "center",
             }}
           >
             <Typography variant="h6">
@@ -127,13 +139,15 @@ const ReportsPage = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item>
           <Paper
             sx={{
               p: 3,
+              width: 230,
               borderRadius: 4,
               backgroundColor: "#ef4444",
               color: "white",
+              textAlign: "center",
             }}
           >
             <Typography variant="h6">
@@ -150,7 +164,6 @@ const ReportsPage = () => {
         </Grid>
 
       </Grid>
-
 
       <Grid container spacing={3}>
 
@@ -191,7 +204,6 @@ const ReportsPage = () => {
             />
           </Paper>
         </Grid>
-
 
         <Grid item xs={12} md={5}>
           <Paper

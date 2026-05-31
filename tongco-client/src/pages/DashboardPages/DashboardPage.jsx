@@ -1,8 +1,8 @@
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import PeopleIcon from "@mui/icons-material/People";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import usersData from "../../data/users.json";
 
 const DashboardPage = () => {
@@ -35,70 +35,148 @@ const DashboardPage = () => {
   return (
     <Box
       sx={{
-        maxWidth: "1100px",
-        mx: "auto",
-        px: 2,
-        py: 4,
-        minHeight: "100vh",
+        width: "100%",
+        minHeight: "calc(100vh - 180px)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        px: 3,
+        py: 6,
+        textAlign: "center",
       }}
     >
-      <Box sx={{ mb: 5 }}>
-        <Typography variant="h4" fontWeight="bold" color="white">
+      <Box sx={{ mb: 6 }}>
+        <Typography variant="h3" fontWeight="bold" color="white">
           Dashboard Overview
         </Typography>
 
-        <Typography sx={{ color: "rgba(255,255,255,0.75)", mt: 1 }}>
+        <Typography
+          sx={{
+            color: "rgba(255,255,255,0.85)",
+            mt: 1.5,
+            fontSize: "1.1rem",
+          }}
+        >
           Welcome back. Here is a quick summary of your system activity.
         </Typography>
       </Box>
 
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 4,
+          flexWrap: "wrap",
+        }}
+      >
         {statCards.map((card, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Paper
-              elevation={6}
-              sx={{
-                p: 3,
-                borderRadius: 5,
-                color: card.textColor,
-                background: card.background,
-                minHeight: 180,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                transition: "0.3s ease",
-                cursor: "pointer",
-                position: "relative",
-                overflow: "hidden",
-                "&:hover": {
-                  transform: "translateY(-8px)",
-                  boxShadow: 12,
-                },
-                "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  width: "120px",
-                  height: "120px",
-                  borderRadius: "50%",
-                  right: "-35px",
-                  bottom: "-35px",
-                  background: "rgba(255,255,255,0.18)",
-                },
-              }}
-            >
-              <Box sx={{ mb: 2, zIndex: 1 }}>{card.icon}</Box>
+          <Paper
+            key={index}
+            elevation={6}
+            sx={{
+              p: 3,
+              borderRadius: 5,
+              color: card.textColor,
+              background: card.background,
+              height: 220,
+              width: 220,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              textAlign: "left",
+              position: "relative",
+              overflow: "hidden",
+              transition: "0.3s ease",
+              boxShadow: "0 18px 35px rgba(0,0,0,0.25)",
 
-              <Typography variant="body1" fontWeight="bold" sx={{ zIndex: 1 }}>
-                {card.title}
-              </Typography>
+              "&:hover": {
+                transform: "translateY(-8px)",
+                boxShadow: "0 24px 45px rgba(0,0,0,0.35)",
+              },
 
-              <Typography variant="h3" fontWeight="bold" sx={{ zIndex: 1 }}>
-                {card.value}
-              </Typography>
-            </Paper>
-          </Grid>
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                width: "130px",
+                height: "130px",
+                borderRadius: "50%",
+                right: "-35px",
+                bottom: "-35px",
+                background: "rgba(255,255,255,0.18)",
+              },
+            }}
+          >
+            <Box sx={{ mb: 2, zIndex: 1 }}>{card.icon}</Box>
+
+            <Typography variant="body1" fontWeight="bold" sx={{ zIndex: 1 }}>
+              {card.title}
+            </Typography>
+
+            <Typography variant="h3" fontWeight="bold" sx={{ zIndex: 1 }}>
+              {card.value}
+            </Typography>
+          </Paper>
         ))}
-      </Grid>
+      </Box>
+
+      <Paper
+        elevation={6}
+        sx={{
+          mt: 6,
+          width: "100%",
+          maxWidth: "950px",
+          borderRadius: 5,
+          overflow: "hidden",
+          background: "rgba(255,255,255,0.95)",
+          boxShadow: "0 18px 35px rgba(0,0,0,0.25)",
+        }}
+      >
+        <Box
+          sx={{
+            p: 3,
+            textAlign: "left",
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+          }}
+        >
+          <LocationOnIcon sx={{ color: "#9333ea", fontSize: 34 }} />
+
+          <Box>
+            <Typography variant="h5" fontWeight="bold" color="#1f2937">
+              Location Mapping
+            </Typography>
+
+            <Typography sx={{ color: "#6b7280", fontSize: "0.95rem" }}>
+              Campus location overview for the system dashboard.
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            width: "100%",
+            height: "380px",
+            borderTop: "1px solid #e5e7eb",
+          }}
+        >
+          <iframe
+            title="National University Manila Map"
+            src="https://www.google.com/maps?q=National%20University%20Manila&output=embed"
+            width="100%"
+            height="100%"
+            style={{
+              border: 0,
+              display: "block",
+            }}
+            loading="lazy"
+            allowFullScreen
+          />
+        </Box>
+      </Paper>
     </Box>
   );
 };

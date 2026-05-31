@@ -6,6 +6,9 @@ const UsersPage = () => {
 
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -35,6 +38,27 @@ const UsersPage = () => {
       loadUsers();
     }
   }, [userType]);
+
+  const filteredUsers = users.filter((user) => {
+    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+    const username = user.username?.toLowerCase() || "";
+    const email = user.email?.toLowerCase() || "";
+    const role = user.type?.toLowerCase() || "";
+    const status = user.isActive ? "active" : "inactive";
+    const searchText = search.toLowerCase();
+
+    const matchesSearch =
+      fullName.includes(searchText) ||
+      username.includes(searchText) ||
+      email.includes(searchText) ||
+      role.includes(searchText) ||
+      status.includes(searchText);
+
+    const matchesRole = roleFilter === "all" || role === roleFilter;
+    const matchesStatus = statusFilter === "all" || status === statusFilter;
+
+    return matchesSearch && matchesRole && matchesStatus;
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -100,13 +124,15 @@ const UsersPage = () => {
   return (
     <div className="w-full min-h-screen bg-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Users Management
-        </h1>
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            Users Management
+          </h1>
 
-        <p className="text-gray-500 mb-6">
-          Add, view, and manage system users.
-        </p>
+          <p className="text-gray-500">
+            Add, view, and manage system users.
+          </p>
+        </div>
 
         {message && (
           <div className="mb-5 bg-purple-100 text-purple-700 px-4 py-3 rounded-lg">
@@ -237,9 +263,42 @@ const UsersPage = () => {
         </div>
 
         <div className="bg-white rounded-xl shadow p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-5">
-            User List
-          </h2>
+          <div className="flex flex-col gap-4 mb-5">
+            <h2 className="text-xl font-bold text-gray-800">
+              User List
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border border-gray-300 p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-purple-400"
+              />
+
+              <select
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value)}
+                className="border border-gray-300 p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-purple-400"
+              >
+                <option value="all">All Roles</option>
+                <option value="admin">Admin</option>
+                <option value="editor">Editor</option>
+                <option value="viewer">Viewer</option>
+              </select>
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="border border-gray-300 p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-purple-400"
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
 
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -248,6 +307,7 @@ const UsersPage = () => {
                   <th className="p-3 text-left">Name</th>
                   <th className="p-3 text-left">Username</th>
                   <th className="p-3 text-left">Email</th>
+                  <th className="p-3 text-left">Gender</th>
                   <th className="p-3 text-left">Role</th>
                   <th className="p-3 text-left">Status</th>
                   <th className="p-3 text-center">Action</th>
@@ -255,7 +315,7 @@ const UsersPage = () => {
               </thead>
 
               <tbody>
-                {users.length === 0 ? (
+                {filteredUsers.length === 0 ? (
                   <tr>
                     <td
                       colSpan="6"
@@ -265,7 +325,7 @@ const UsersPage = () => {
                     </td>
                   </tr>
                 ) : (
-                  users.map((user) => (
+                  filteredUsers.map((user) => (
                     <tr
                       key={user._id}
                       className="border-b hover:bg-gray-50 text-gray-700"
@@ -275,6 +335,7 @@ const UsersPage = () => {
                       </td>
                       <td className="p-3">{user.username}</td>
                       <td className="p-3">{user.email}</td>
+                      <td className="p-3">{user.gender}</td>
                       <td className="p-3 capitalize">{user.type}</td>
                       <td className="p-3">
                         {user.isActive ? "Active" : "Inactive"}
@@ -293,6 +354,10 @@ const UsersPage = () => {
               </tbody>
             </table>
           </div>
+
+          <p className="text-sm text-gray-500 mt-4">
+            Showing {filteredUsers.length} of {users.length} users
+          </p>
         </div>
       </div>
     </div>
