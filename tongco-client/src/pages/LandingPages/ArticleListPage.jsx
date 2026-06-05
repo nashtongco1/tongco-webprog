@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ArticleList from "../../components/ArticleList";
 
-const API_URL = "http://localhost:8000/api/articles";
+const API_URL = "https://tongco-server.onrender.com/api/articles";
 
 const ArticleListPage = () => {
   const [articles, setArticles] = useState([]);

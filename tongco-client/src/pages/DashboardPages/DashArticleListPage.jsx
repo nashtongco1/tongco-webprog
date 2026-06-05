@@ -28,7 +28,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import defaultArticles from "../../data/article-content";
 
-const API_URL = "http://localhost:8000/api/articles";
+const API_URL = "https://tongco-server.onrender.com/api/articles";
 
 const DashArticleListPage = () => {
   const [articleList, setArticleList] = useState([]);
