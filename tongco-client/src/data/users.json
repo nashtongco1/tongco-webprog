@@ -1,0 +1,71 @@
+[
+  {
+    "id": 1,
+    "firstName": "LeBron",
+    "lastName": "James",
+    "username": "kingjames",
+    "email": "lebron@gmail.com",
+    "password":"password123",
+    "role": "Admin",
+    "gender": "Male",
+    "status": "Active",
+    "age": 38,
+    "contact": "09123456789"
+  },
+
+  {
+    "id": 2,
+    "firstName": "Stephen",
+    "lastName": "Curry",
+    "username": "chefcurry",
+    "email": "curry@gmail.com",
+    "password":"password123",
+    "role": "Viewer",
+    "gender": "Male",
+    "status": "Active",
+    "age": 36,
+    "contact": "09987654321"
+  },
+
+  {
+    "id": 3,
+    "firstName": "Kevin",
+    "lastName": "Durant",
+    "username": "easymoney",
+    "email": "durant@gmail.com",
+    "password":"password123",
+    "role": "Editor",
+    "gender": "Male",
+    "status": "Inactive",
+    "age": 35,
+    "contact": "09111222333"
+  },
+
+  {
+    "id": 4,
+    "firstName": "Kobe",
+    "lastName": "Bryant",
+    "username": "blackmamba",
+    "email": "kobe@gmail.com",
+    "password":"password123",
+    "role": "Admin",
+    "gender": "Male",
+    "status": "Active",
+    "age": 41,
+    "contact": "09223334444"
+  },
+
+  {
+    "id": 5,
+    "firstName": "Michael",
+    "lastName": "Jordan",
+    "username": "airjordan",
+    "email": "mj@gmail.com",
+    "password":"password123",
+    "role": "Viewer",
+    "gender": "Male",
+    "status": "Inactive",
+    "age": 60,
+    "contact": "09334445555"
+  }
+]
