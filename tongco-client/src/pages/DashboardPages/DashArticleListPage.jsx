@@ -170,7 +170,7 @@ const DashArticleListPage = () => {
       slug: generatedSlug,
       title: formData.title.trim(),
       description: formData.description.trim(),
-      image: formData.image.trim(),
+      image: formData.image,
       content: [formData.description.trim()],
     };
 
@@ -247,13 +247,18 @@ const DashArticleListPage = () => {
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
 
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
       setFormData((prev) => ({
         ...prev,
-        image: imageUrl,
+        image: reader.result,
       }));
-    }
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const getPreview = (article) => {
@@ -276,7 +281,11 @@ const DashArticleListPage = () => {
           Articles
         </Typography>
 
-        <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenAdd}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleOpenAdd}
+        >
           Add Article
         </Button>
       </Box>
@@ -332,7 +341,11 @@ const DashArticleListPage = () => {
                     </TableCell>
 
                     <TableCell>{article.name}</TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }}>{article.title}</TableCell>
+
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      {article.title}
+                    </TableCell>
+
                     <TableCell>{getPreview(article)}</TableCell>
 
                     <TableCell>
@@ -384,7 +397,12 @@ const DashArticleListPage = () => {
         />
       </Paper>
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} fullWidth maxWidth="sm">
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        fullWidth
+        maxWidth="sm"
+      >
         <DialogTitle fontWeight="bold">
           {editId ? "Edit Article" : "Add Article"}
         </DialogTitle>
@@ -416,14 +434,21 @@ const DashArticleListPage = () => {
               minRows={3}
               value={formData.description}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, description: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
               }
             />
 
             <TextField
-              label="Image URL"
+              label="Image URL or Uploaded Image"
               fullWidth
-              value={formData.image}
+              value={
+                formData.image.startsWith("data:image")
+                  ? "Uploaded image selected"
+                  : formData.image
+              }
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, image: e.target.value }))
               }
@@ -431,7 +456,12 @@ const DashArticleListPage = () => {
 
             <Button variant="outlined" component="label">
               Upload Image
-              <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
             </Button>
 
             {formData.image && (
@@ -452,6 +482,7 @@ const DashArticleListPage = () => {
 
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+
           <Button variant="contained" onClick={handleSaveArticle}>
             {editId ? "Save Changes" : "Add Article"}
           </Button>
