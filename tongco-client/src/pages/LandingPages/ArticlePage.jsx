@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import NotFoundPage from "../NotFoundPage";
 
-const API_URL = "http://localhost:8000/api/articles";
+import constants from "../../constants";
+
+const API_URL = `${constants.HOST}/articles`;
 
 const ArticlePage = () => {
   const { name } = useParams();

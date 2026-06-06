@@ -1,7 +1,8 @@
 import axios from "axios";
+import constants from "../constants"; // adjust path if needed
 
 const API = axios.create({
-  baseURL: "http://localhost:8000/api/users",
+  baseURL: `${constants.HOST}/users`,
 });
 
 export const fetchUsers = () => API.get("/");
