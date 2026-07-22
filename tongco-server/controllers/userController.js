@@ -107,9 +107,11 @@ const updateUser = async (req, res) => {
       req.body.password = await bcrypt.hash(req.body.password, 10);
     }
 
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    }).select("-password");
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    ).select("-password");
 
     res.status(200).json({
       success: true,
@@ -144,7 +146,13 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    // Allow login using either email or username
+    const user = await User.findOne({
+      $or: [
+        { email: email },
+        { username: email },
+      ],
+    });
 
     if (!user) {
       return res.status(404).json({
@@ -160,7 +168,10 @@ const loginUser = async (req, res) => {
       });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user.password
+    );
 
     if (!isPasswordCorrect) {
       return res.status(401).json({
@@ -175,7 +186,9 @@ const loginUser = async (req, res) => {
         type: user.type,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      {
+        expiresIn: "1d",
+      }
     );
 
     res.status(200).json({
@@ -187,10 +200,13 @@ const loginUser = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        username: user.username,
         type: user.type,
       },
     });
   } catch (error) {
+    console.log("Login error:", error);
+
     res.status(500).json({
       success: false,
       message: error.message,
