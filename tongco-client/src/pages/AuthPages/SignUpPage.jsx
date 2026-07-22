@@ -17,7 +17,7 @@ const SignUpPage = () => {
     email: "",
     password: "",
     address: "N/A",
-    type: "editor",
+    type: "admin",
     isActive: true,
   });
 
